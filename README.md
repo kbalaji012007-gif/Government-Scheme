@@ -51,7 +51,7 @@ flowchart TD
         FastAPIServer --> RouterAuth
         
         Services[Scheme, Eligibility & Center Services]
-        Repo[MongoDB Repositories]
+        Repo[Firestore Repositories]
         
         RouterSchemes --> Services
         RouterEligibility --> Services
@@ -60,8 +60,8 @@ flowchart TD
         Services --> Repo
     end
 
-    subgraph DataStore ["Database Layer (MongoDB)"]
-        DBConn[PyMongo Client & Connection Manager]
+    subgraph DataStore ["Database Layer (Firebase Cloud Firestore)"]
+        DBConn[Firebase Admin Client & Connection Manager]
         Collections[("schemes", "centers", "users")]
         FallbackMock["Resilient In-Process Mock Fallback"]
         
@@ -120,7 +120,7 @@ flowchart TD
 - **FastAPI:** 0.115+
 - **Server:** Uvicorn 0.32+
 - **Validation:** Pydantic v2 & Pydantic-Settings
-- **Database Driver:** PyMongo 4.10+ (with transparent mongomock fallback)
+- **Database Driver:** Firebase Admin SDK & Google Cloud Firestore (with transparent in-process fallback)
 - **Security:** bcrypt 5.0+ and PyJWT 2.15+
 - **Testing:** pytest 9.1+, pytest-asyncio, and HTTPX
 
@@ -159,7 +159,7 @@ ruralconnect-karnataka/
 ├── backend/
 │   ├── app/
 │   │   ├── core/               # config.py (Settings), security.py (bcrypt & JWT)
-│   │   ├── db/                 # mongodb.py (Connection manager & indexes)
+│   │   ├── db/                 # firebase.py (Firestore manager & collections), mongodb.py (compat)
 │   │   ├── models/             # Domain schemas
 │   │   ├── repositories/       # Scheme, Center, and User data access
 │   │   ├── routers/            # Health, Categories, Schemes, Centers, Auth

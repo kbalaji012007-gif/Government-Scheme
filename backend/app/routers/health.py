@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.db.mongodb import db_manager
+from app.db.firebase import db_manager, get_db
 from app.core.config import settings
 
 router = APIRouter(tags=["Health"])
@@ -7,11 +7,11 @@ router = APIRouter(tags=["Health"])
 
 @router.get("/health")
 async def health_check():
-    db_status = "disconnected"
-    database_type = "unknown"
-    if db_manager.is_connected:
-        db_status = "connected"
-        database_type = "mongomock" if db_manager.is_mock else "mongodb"
+    if not db_manager.is_connected:
+        get_db()
+    
+    db_status = "connected" if db_manager.is_connected else "disconnected"
+    database_type = "firestore_mock" if db_manager.is_mock else "firebase_firestore"
 
     return {
         "status": "healthy",
@@ -21,6 +21,6 @@ async def health_check():
         "database": {
             "status": db_status,
             "type": database_type,
-            "database_name": settings.DATABASE_NAME,
+            "project_id": settings.FIREBASE_PROJECT_ID,
         },
     }

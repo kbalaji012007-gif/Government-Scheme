@@ -1,24 +1,46 @@
 from typing import Optional, Dict, Any
-from app.db.mongodb import get_db
+from app.db.firebase import get_db
 
 
 class UserRepository:
     def _collection(self):
-        return get_db()["users"]
+        return get_db().collection("users")
 
     def find_by_email(self, email: str) -> Optional[Dict[str, Any]]:
         col = self._collection()
-        return col.find_one({"email": email.lower().strip()}, {"_id": 0})
+        normalized_email = email.lower().strip()
+        query = col.where("email", "==", normalized_email).limit(1)
+        docs = list(query.stream())
+        if docs and docs[0].exists:
+            data = docs[0].to_dict()
+            if data and "id" not in data:
+                data["id"] = docs[0].id
+            return data
+        return None
 
     def find_by_id(self, user_id: str) -> Optional[Dict[str, Any]]:
         col = self._collection()
-        return col.find_one({"id": user_id}, {"_id": 0})
+        doc = col.document(user_id).get()
+        if doc.exists:
+            data = doc.to_dict()
+            if data and "id" not in data:
+                data["id"] = doc.id
+            return data
+        
+        query = col.where("id", "==", user_id).limit(1)
+        docs = list(query.stream())
+        if docs and docs[0].exists:
+            data = docs[0].to_dict()
+            if data and "id" not in data:
+                data["id"] = docs[0].id
+            return data
+        return None
 
     def create(self, user_data: Dict[str, Any]) -> Dict[str, Any]:
         col = self._collection()
         clean_user = dict(user_data)
         clean_user["email"] = clean_user["email"].lower().strip()
-        col.insert_one(clean_user)
-        # Return without MongoDB internal _id
-        clean_user.pop("_id", None)
+        doc_id = clean_user.get("id") or clean_user["email"]
+        
+        col.document(doc_id).set(clean_user)
         return clean_user

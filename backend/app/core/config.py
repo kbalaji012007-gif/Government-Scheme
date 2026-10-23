@@ -1,6 +1,5 @@
-from typing import List
+from typing import List, Optional
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pydantic import Field
 
 
 class Settings(BaseSettings):
@@ -13,7 +12,13 @@ class Settings(BaseSettings):
     ENVIRONMENT: str = "development"
     LOG_LEVEL: str = "INFO"
 
-    # MongoDB Settings
+    # Firebase / Firestore Settings
+    FIREBASE_PROJECT_ID: str = "ruralconnect-karnataka"
+    FIREBASE_CREDENTIALS_PATH: Optional[str] = None
+    FIREBASE_CREDENTIALS_JSON: Optional[str] = None
+    FIREBASE_DATABASE_ID: str = "(default)"
+
+    # MongoDB Settings (legacy / optional fallback)
     MONGODB_URI: str = "mongodb://127.0.0.1:27017"
     DATABASE_NAME: str = "ruralconnect_karnataka"
 

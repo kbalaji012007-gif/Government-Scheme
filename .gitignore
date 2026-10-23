@@ -9,6 +9,9 @@ env/
 .env
 .env.*
 !.env.example
+*-firebase-adminsdk-*.json
+*service-account*.json
+*serviceaccount*.json
 
 # Node.js
 node_modules/

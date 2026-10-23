@@ -8,7 +8,7 @@ backend_root = os.path.dirname(current_dir)
 if backend_root not in sys.path:
     sys.path.insert(0, backend_root)
 
-from app.db.mongodb import db_manager, get_db
+from app.db.firebase import db_manager, get_db
 from app.core.security import hash_password
 
 logger = logging.getLogger("ruralconnect.seed")
@@ -998,42 +998,34 @@ SAMPLE_USERS = [
 
 def seed_database(auto_if_empty: bool = False) -> None:
     db = get_db()
-    schemes_col = db["schemes"]
-    centers_col = db["centers"]
-    users_col = db["users"]
+    schemes_col = db.collection("schemes")
+    centers_col = db.collection("centers")
+    users_col = db.collection("users")
 
     # 1. Seed Schemes
-    scheme_count = schemes_col.count_documents({})
-    if scheme_count == 0 or not auto_if_empty:
-        logger.info("Seeding schemes collection (current count: %d)...", scheme_count)
+    existing_schemes = list(schemes_col.limit(1).stream())
+    if len(existing_schemes) == 0 or not auto_if_empty:
+        logger.info("Seeding schemes collection in Firestore...")
         for s in SAMPLE_SCHEMES:
-            schemes_col.update_one(
-                {"id": s["id"]},
-                {"$setOnInsert": s},
-                upsert=True,
-            )
-        logger.info("Successfully seeded %d schemes.", len(SAMPLE_SCHEMES))
+            schemes_col.document(s["id"]).set(s, merge=True)
+        logger.info("Successfully seeded %d schemes in Firestore.", len(SAMPLE_SCHEMES))
     else:
-        logger.info("Schemes collection already populated (%d records). Skipping auto-seed.", scheme_count)
+        logger.info("Schemes collection already populated. Skipping auto-seed.")
 
     # 2. Seed Centres
-    center_count = centers_col.count_documents({})
-    if center_count == 0 or not auto_if_empty:
-        logger.info("Seeding centers collection (current count: %d)...", center_count)
+    existing_centers = list(centers_col.limit(1).stream())
+    if len(existing_centers) == 0 or not auto_if_empty:
+        logger.info("Seeding centers collection in Firestore...")
         for c in SAMPLE_CENTRES:
-            centers_col.update_one(
-                {"id": c["id"]},
-                {"$setOnInsert": c},
-                upsert=True,
-            )
-        logger.info("Successfully seeded %d service centres.", len(SAMPLE_CENTRES))
+            centers_col.document(c["id"]).set(c, merge=True)
+        logger.info("Successfully seeded %d service centres in Firestore.", len(SAMPLE_CENTRES))
     else:
-        logger.info("Centers collection already populated (%d records). Skipping auto-seed.", center_count)
+        logger.info("Centers collection already populated. Skipping auto-seed.")
 
     # 3. Seed Demo User
-    user_count = users_col.count_documents({})
-    if user_count == 0 or not auto_if_empty:
-        logger.info("Seeding default demo user...")
+    existing_users = list(users_col.limit(1).stream())
+    if len(existing_users) == 0 or not auto_if_empty:
+        logger.info("Seeding default demo user in Firestore...")
         for u in SAMPLE_USERS:
             doc = {
                 "id": u["id"],
@@ -1043,12 +1035,8 @@ def seed_database(auto_if_empty: bool = False) -> None:
                 "preferred_language": u["preferred_language"],
                 "hashed_password": hash_password(u["password_plain"]),
             }
-            users_col.update_one(
-                {"email": doc["email"]},
-                {"$setOnInsert": doc},
-                upsert=True,
-            )
-        logger.info("Demo user seeded successfully.")
+            users_col.document(doc["id"]).set(doc, merge=True)
+        logger.info("Demo user seeded successfully in Firestore.")
 
 
 if __name__ == "__main__":

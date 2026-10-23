@@ -1,0 +1,21 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Schemes are publicly readable by all citizens
+    match /schemes/{schemeId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Citizen Service Centres are publicly readable
+    match /centers/{centerId} {
+      allow read: if true;
+      allow write: if true;
+    }
+
+    // Users collection for citizen auth
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+  }
+}

@@ -6,7 +6,7 @@ from fastapi.responses import JSONResponse
 from fastapi.exceptions import RequestValidationError
 
 from app.core.config import settings
-from app.db.mongodb import db_manager
+from app.db.firebase import db_manager
 from app.routers import health, categories, schemes, centers, auth
 
 # Configure logging
@@ -56,6 +56,7 @@ logger.info("Configuring CORS for origins: %s", origins)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins if origins else ["*"],
+    allow_origin_regex=r"https://.*\.vercel\.app",
     allow_credentials=True,
     allow_methods=["GET", "POST", "PUT", "DELETE", "OPTIONS", "HEAD"],
     allow_headers=["*"],
