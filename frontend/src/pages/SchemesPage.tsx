@@ -110,7 +110,7 @@ export const SchemesPage: React.FC = () => {
 
       {/* Filter and Search Bar */}
       <div className="bg-white rounded-2xl border border-stone-200 p-4 sm:p-6 shadow-2xs space-y-4">
-        <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-3">
+        <form onSubmit={handleSearchSubmit} className="flex flex-col sm:flex-row gap-2.5 sm:gap-3">
           <div className="relative flex-1">
             <Search className="w-5 h-5 text-stone-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
@@ -118,13 +118,14 @@ export const SchemesPage: React.FC = () => {
               value={searchInput}
               onChange={(e) => setSearchInput(e.target.value)}
               placeholder={t('searchPlaceholder')}
-              className="w-full pl-10 pr-4 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:border-emerald-600 focus:outline-hidden"
+              className="w-full pl-10 pr-10 py-2.5 text-sm bg-stone-50 border border-stone-200 rounded-xl focus:bg-white focus:border-emerald-600 focus:outline-hidden"
             />
             {searchInput && (
               <button
                 type="button"
                 onClick={() => setSearchInput('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 hover:text-stone-600"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-stone-400 hover:text-stone-600"
+                aria-label="Clear search text"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -138,16 +139,19 @@ export const SchemesPage: React.FC = () => {
           </button>
         </form>
 
-        {/* Category Pills & Clear Button */}
-        <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t border-stone-100">
-          <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-            <Filter className="w-4 h-4 text-stone-500 mr-1" />
+        {/* Category Pills (Touch scrollable on mobile, wrapping on laptop) */}
+        <div className="pt-2 border-t border-stone-100 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="flex items-center gap-1.5 sm:gap-2 overflow-x-auto pb-1.5 sm:pb-0 sm:flex-wrap -mx-2 px-2 sm:mx-0 sm:px-0">
+            <span className="text-xs font-semibold text-stone-500 shrink-0 flex items-center gap-1 mr-1">
+              <Filter className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Category:</span>
+            </span>
             {categoryOptions.map((cat) => (
               <button
                 key={cat.id}
                 type="button"
                 onClick={() => handleCategoryChange(cat.id)}
-                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all ${
+                className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-all shrink-0 whitespace-nowrap ${
                   selectedCategory === cat.id
                     ? 'bg-emerald-700 text-white shadow-2xs'
                     : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
@@ -161,7 +165,7 @@ export const SchemesPage: React.FC = () => {
           {(searchInput || selectedCategory !== 'all') && (
             <button
               onClick={handleClearFilters}
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-rose-600 transition-colors py-1"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-stone-500 hover:text-rose-600 transition-colors py-1 shrink-0 self-start sm:self-auto"
             >
               <RotateCcw className="w-3.5 h-3.5" />
               {t('clearFilters')}

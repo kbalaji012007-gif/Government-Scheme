@@ -172,101 +172,108 @@ export const Header: React.FC = () => {
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile Drawer Overlay & Content */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-stone-200 bg-white px-4 pt-3 pb-6 space-y-2 shadow-lg animate-in slide-in-from-top-2 duration-200">
-          <NavLink
-            to="/"
-            end
+        <>
+          <div
+            className="fixed inset-0 top-[100px] bg-stone-900/40 backdrop-blur-xs z-30 md:hidden animate-in fade-in duration-200"
             onClick={() => setMobileMenuOpen(false)}
-            className={mobileNavLinkClass}
-          >
-            {t('navHome')}
-          </NavLink>
-          <NavLink
-            to="/schemes"
-            onClick={() => setMobileMenuOpen(false)}
-            className={mobileNavLinkClass}
-          >
-            {t('navSchemes')}
-          </NavLink>
-          <NavLink
-            to="/eligibility"
-            onClick={() => setMobileMenuOpen(false)}
-            className={mobileNavLinkClass}
-          >
-            {t('navEligibility')}
-          </NavLink>
-          <NavLink
-            to="/centers"
-            onClick={() => setMobileMenuOpen(false)}
-            className={mobileNavLinkClass}
-          >
-            {t('navCenters')}
-          </NavLink>
+            aria-hidden="true"
+          />
+          <div className="relative z-40 md:hidden border-t border-stone-200 bg-white px-4 pt-3 pb-6 space-y-1.5 shadow-xl animate-in slide-in-from-top-2 duration-200">
+            <NavLink
+              to="/"
+              end
+              onClick={() => setMobileMenuOpen(false)}
+              className={mobileNavLinkClass}
+            >
+              {t('navHome')}
+            </NavLink>
+            <NavLink
+              to="/schemes"
+              onClick={() => setMobileMenuOpen(false)}
+              className={mobileNavLinkClass}
+            >
+              {t('navSchemes')}
+            </NavLink>
+            <NavLink
+              to="/eligibility"
+              onClick={() => setMobileMenuOpen(false)}
+              className={mobileNavLinkClass}
+            >
+              {t('navEligibility')}
+            </NavLink>
+            <NavLink
+              to="/centers"
+              onClick={() => setMobileMenuOpen(false)}
+              className={mobileNavLinkClass}
+            >
+              {t('navCenters')}
+            </NavLink>
 
-          <div className="pt-4 border-t border-stone-200 mt-2 space-y-3">
-            {/* Mobile Language Switcher */}
-            <div className="flex items-center justify-between px-3 py-2 bg-stone-50 rounded-xl">
-              <span className="text-sm font-medium text-stone-600 flex items-center gap-2">
-                <Languages className="w-4 h-4 text-emerald-700" />
-                Language / ಭಾಷೆ:
-              </span>
-              <div className="flex gap-1">
-                <button
-                  onClick={() => setLanguage('kn')}
-                  className={`px-3 py-1 text-xs font-bold rounded-md ${
-                    language === 'kn' ? 'bg-emerald-700 text-white' : 'bg-stone-200 text-stone-700'
-                  }`}
-                >
-                  ಕನ್ನಡ
-                </button>
-                <button
-                  onClick={() => setLanguage('en')}
-                  className={`px-3 py-1 text-xs font-bold rounded-md ${
-                    language === 'en' ? 'bg-emerald-700 text-white' : 'bg-stone-200 text-stone-700'
-                  }`}
-                >
-                  English
-                </button>
-              </div>
-            </div>
-
-            {/* Mobile Auth */}
-            {isAuthenticated && user ? (
-              <div className="space-y-2">
-                <div className="flex items-center gap-3 px-3 py-2 bg-stone-50 rounded-lg">
-                  <UserIcon className="w-5 h-5 text-emerald-700" />
-                  <span className="font-semibold text-stone-800 text-sm">{user.full_name}</span>
+            <div className="pt-3 border-t border-stone-200 mt-2 space-y-3">
+              {/* Mobile Language Switcher */}
+              <div className="flex items-center justify-between px-3.5 py-2.5 bg-stone-50 rounded-xl border border-stone-200">
+                <span className="text-xs sm:text-sm font-semibold text-stone-700 flex items-center gap-2">
+                  <Languages className="w-4 h-4 text-emerald-700" />
+                  Language / ಭಾಷೆ:
+                </span>
+                <div className="flex gap-1.5">
+                  <button
+                    onClick={() => setLanguage('kn')}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+                      language === 'kn' ? 'bg-emerald-700 text-white shadow-2xs' : 'bg-stone-200 text-stone-700'
+                    }`}
+                  >
+                    ಕನ್ನಡ
+                  </button>
+                  <button
+                    onClick={() => setLanguage('en')}
+                    className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-colors ${
+                      language === 'en' ? 'bg-emerald-700 text-white shadow-2xs' : 'bg-stone-200 text-stone-700'
+                    }`}
+                  >
+                    English
+                  </button>
                 </div>
-                <button
-                  onClick={handleLogout}
-                  className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-lg transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                  {t('navLogout')}
-                </button>
               </div>
-            ) : (
-              <div className="grid grid-cols-2 gap-2">
-                <Link
-                  to="/login"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-stone-800 bg-stone-100 hover:bg-stone-200 rounded-lg text-center"
-                >
-                  {t('navLogin')}
-                </Link>
-                <Link
-                  to="/register"
-                  onClick={() => setMobileMenuOpen(false)}
-                  className="flex items-center justify-center px-4 py-2.5 text-sm font-semibold text-white bg-emerald-700 hover:bg-emerald-800 rounded-lg text-center"
-                >
-                  {t('navRegister')}
-                </Link>
-              </div>
-            )}
+
+              {/* Mobile Auth */}
+              {isAuthenticated && user ? (
+                <div className="space-y-2 pt-1">
+                  <div className="flex items-center gap-3 px-3.5 py-2.5 bg-stone-50 rounded-xl border border-stone-200">
+                    <UserIcon className="w-5 h-5 text-emerald-700 shrink-0" />
+                    <span className="font-bold text-stone-800 text-sm truncate">{user.full_name}</span>
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="w-full flex items-center justify-center gap-2 px-4 py-3 text-sm font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 rounded-xl transition-colors"
+                  >
+                    <LogOut className="w-4 h-4" />
+                    {t('navLogout')}
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 gap-2.5 pt-1">
+                  <Link
+                    to="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center px-4 py-3 text-sm font-bold text-stone-800 bg-stone-100 hover:bg-stone-200 rounded-xl text-center transition-colors"
+                  >
+                    {t('navLogin')}
+                  </Link>
+                  <Link
+                    to="/register"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="flex items-center justify-center px-4 py-3 text-sm font-bold text-white bg-emerald-700 hover:bg-emerald-800 rounded-xl text-center shadow-xs transition-colors"
+                  >
+                    {t('navRegister')}
+                  </Link>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
+        </>
       )}
     </header>
   );
