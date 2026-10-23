@@ -132,6 +132,8 @@ const translations: Record<Language, Record<string, string>> = {
     preferredLangLabel: 'Preferred Language',
     signInBtn: 'Sign In',
     signUpBtn: 'Create Account',
+    googleSignInBtn: 'Continue with Google',
+    orDivider: 'OR',
     alreadyHaveAccount: 'Already have an account? Sign in',
     dontHaveAccount: "Don't have an account? Register now",
 
@@ -270,6 +272,8 @@ const translations: Record<Language, Record<string, string>> = {
     preferredLangLabel: 'ಆದ್ಯತೆಯ ಭಾಷೆ',
     signInBtn: 'ಸೈನ್ ಇನ್',
     signUpBtn: 'ಖಾತೆ ತೆರೆಯಿರಿ',
+    googleSignInBtn: 'ಗೂಗಲ್ ಮೂಲಕ ಮುಂದುವರಿಯಿರಿ',
+    orDivider: 'ಅಥವಾ',
     alreadyHaveAccount: 'ಈಗಾಗಲೇ ಖಾತೆ ಇದೆಯೇ? ಲಾಗಿನ್ ಆಗಿ',
     dontHaveAccount: 'ಖಾತೆ ಇಲ್ಲವೇ? ಹೊಸದಾಗಿ ನೋಂದಾಯಿಸಿ',
 

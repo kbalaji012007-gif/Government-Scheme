@@ -1,6 +1,6 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getFirestore, collection, getDocs, doc, getDoc, query, where } from 'firebase/firestore';
-import { getAuth } from 'firebase/auth';
+import { getFirestore, collection, getDocs, doc, getDoc, query, where, setDoc } from 'firebase/firestore';
+import { getAuth, GoogleAuthProvider, signInWithPopup, UserCredential } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY || "AIzaSyB_AWqA9-Z7X-uxEM1diduZxCdDE6zxHQE",
@@ -14,4 +14,10 @@ const firebaseConfig = {
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 export const db = getFirestore(app);
 export const auth = getAuth(app);
-export { collection, getDocs, doc, getDoc, query, where };
+export const googleProvider = new GoogleAuthProvider();
+
+export const signInWithGooglePopup = async (): Promise<UserCredential> => {
+  return await signInWithPopup(auth, googleProvider);
+};
+
+export { collection, getDocs, doc, getDoc, query, where, setDoc };

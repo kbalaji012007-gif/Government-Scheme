@@ -1,6 +1,12 @@
 from typing import Dict, Any
 from fastapi import APIRouter, Depends
-from app.schemas.user import UserRegisterRequest, UserLoginRequest, UserResponse, TokenResponse
+from app.schemas.user import (
+    UserRegisterRequest,
+    UserLoginRequest,
+    GoogleAuthRequest,
+    UserResponse,
+    TokenResponse,
+)
 from app.services.auth_service import AuthService
 from app.core.security import get_current_user_token
 
@@ -16,6 +22,11 @@ async def register(payload: UserRegisterRequest):
 @router.post("/login", response_model=TokenResponse)
 async def login(payload: UserLoginRequest):
     return auth_service.login_user(payload)
+
+
+@router.post("/google", response_model=TokenResponse)
+async def google_auth(payload: GoogleAuthRequest):
+    return auth_service.google_auth(payload)
 
 
 @router.get("/me", response_model=UserResponse)

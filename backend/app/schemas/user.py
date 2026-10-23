@@ -14,6 +14,14 @@ class UserLoginRequest(BaseModel):
     password: str
 
 
+class GoogleAuthRequest(BaseModel):
+    id_token: Optional[str] = None
+    email: EmailStr
+    full_name: str = ""
+    uid: str
+    preferred_language: Optional[str] = "kn"
+
+
 class UserResponse(BaseModel):
     id: str
     email: str

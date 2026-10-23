@@ -2,7 +2,13 @@ import uuid
 from datetime import datetime, timezone
 from fastapi import HTTPException, status
 from app.repositories.user_repository import UserRepository
-from app.schemas.user import UserRegisterRequest, UserLoginRequest, UserResponse, TokenResponse
+from app.schemas.user import (
+    UserRegisterRequest,
+    UserLoginRequest,
+    GoogleAuthRequest,
+    UserResponse,
+    TokenResponse,
+)
 from app.core.security import hash_password, verify_password, create_access_token
 
 user_repo = UserRepository()
@@ -91,3 +97,34 @@ class AuthService:
             role=user["role"],
             preferred_language=user.get("preferred_language", "kn"),
         )
+
+    def google_auth(self, data: "GoogleAuthRequest") -> TokenResponse:
+        user = user_repo.find_by_email(data.email)
+        if not user:
+            # Register new citizen from Google profile
+            user_id = f"google_{data.uid}" if data.uid else f"user_{uuid.uuid4().hex[:12]}"
+            new_user = {
+                "id": user_id,
+                "email": data.email.lower().strip(),
+                "full_name": (data.full_name or "Citizen").strip(),
+                "role": "citizen",
+                "preferred_language": data.preferred_language or "kn",
+                "auth_provider": "google",
+                "created_at": datetime.now(timezone.utc).isoformat(),
+            }
+            user = user_repo.create(new_user)
+
+        user_response = UserResponse(
+            id=user["id"],
+            email=user["email"],
+            full_name=user["full_name"],
+            role=user.get("role", "citizen"),
+            preferred_language=user.get("preferred_language", "kn"),
+        )
+
+        token = create_access_token(
+            subject=user_response.id,
+            extra_data={"email": user_response.email, "role": user_response.role},
+        )
+
+        return TokenResponse(access_token=token, token_type="bearer", user=user_response)

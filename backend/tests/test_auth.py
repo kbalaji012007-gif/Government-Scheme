@@ -66,3 +66,27 @@ async def test_login_invalid_password_rejected(client):
     resp = await client.post("/auth/login", json=login_payload)
     assert resp.status_code == 401
     assert "invalid email or password" in resp.json()["detail"].lower()
+
+
+@pytest.mark.asyncio
+async def test_google_auth_flow(client):
+    unique_email = f"google_{uuid.uuid4().hex[:8]}@gmail.com"
+    payload = {
+        "email": unique_email,
+        "full_name": "Kavitha Gowda",
+        "uid": f"uid_{uuid.uuid4().hex[:12]}",
+        "preferred_language": "kn",
+    }
+    resp = await client.post("/auth/google", json=payload)
+    assert resp.status_code == 200
+    data = resp.json()
+    assert "access_token" in data
+    assert data["user"]["email"] == unique_email.lower()
+    assert data["user"]["full_name"] == "Kavitha Gowda"
+
+    # Verify profile retrieval with the generated token
+    token = data["access_token"]
+    me_resp = await client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
+    assert me_resp.status_code == 200
+    assert me_resp.json()["email"] == unique_email.lower()
+

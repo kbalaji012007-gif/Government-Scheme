@@ -182,6 +182,19 @@ class ApiClient {
     });
   }
 
+  async googleAuth(payload: {
+    id_token?: string;
+    email: string;
+    full_name: string;
+    uid: string;
+    preferred_language?: string;
+  }): Promise<AuthResponse> {
+    return this.request<AuthResponse>('/auth/google', {
+      method: 'POST',
+      body: JSON.stringify(payload),
+    });
+  }
+
   async getMe(): Promise<User> {
     return this.request<User>('/auth/me');
   }
