@@ -1,0 +1,7 @@
+{
+  "name": "ruralconnect-karnataka-monorepo",
+  "private": true,
+  "scripts": {
+    "build": "cd frontend && npm install && npm run build"
+  }
+}
