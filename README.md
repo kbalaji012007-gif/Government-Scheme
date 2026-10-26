@@ -14,6 +14,7 @@ The platform aims to make government information more accessible to farmers, stu
 
 🚀 **Live Website:** [RuralConnect Karnataka](https://government-scheme-ten.vercel.app/)
 
+💻 **GitHub Repository:** [Government-Scheme](https://github.com/kbalaji012007-gif/Government-Scheme)
 
 ---
 
